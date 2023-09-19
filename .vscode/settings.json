@@ -1,3 +1,4 @@
 {
-    "dart.flutterSdkPath": "/Users/sengpedz/fvm/versions/3.13.2"
+    "dart.flutterSdkPath": "/Users/sengpedz/fvm/versions/3.13.2",
+    "discord.enabled": true
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:callkit_experimental/screens/home/calling_page.dart';
 import 'package:callkit_experimental/screens/home/home.vm.dart';
+import 'package:callkit_experimental/services/callkit_service.dart';
 import 'package:callkit_experimental/services/database_service.dart';
 import 'package:flutter/material.dart';
 
@@ -31,23 +32,9 @@ class _HomeViewState extends State<HomeView> {
           children: [
             ElevatedButton(
                 onPressed: () async {
-                  // final data = await DatabaseService.findByNumber("0910533948");
-                  // log(data?.title ?? "");
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CallingPage(),
-                      ));
+                  CallKitService.incommingTest("0910533951");
                 },
-                child: Text("Calling Page")),
-            ElevatedButton(
-                onPressed: () async {
-                  final data = await DatabaseService.findByNumber("0910533948");
-
-                  log(data?.title ?? "");
-                },
-                child: Text("Find")),
+                child: Text("Call")),
           ],
         ),
       ),

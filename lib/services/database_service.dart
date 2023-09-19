@@ -9,9 +9,10 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 List<SuspeciousNumber> sampleDatas = [
-  SuspeciousNumber(title: "Phone 1", number: "0910533948"),
+  SuspeciousNumber(title: "ลุงโฟน", number: "0910533948"),
   SuspeciousNumber(title: "Phone 2", number: "0910533949"),
   SuspeciousNumber(title: "Phone 3", number: "0910533950"),
+  SuspeciousNumber(title: "โรซี่ มิจฉาชีพ (หลอกผู้ชาย)", number: "0910533951"),
 ];
 
 class DatabaseService {
@@ -46,7 +47,8 @@ class DatabaseService {
           }
         });
       } else {
-        throw Exception("Exception : Failed to Create Sample Datas");
+        return;
+        // throw Exception("Exception : Failed to Create Sample Datas");
       }
     } catch (err) {
       rethrow;
