@@ -2,18 +2,14 @@
 
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:callkit_experimental/models/caller_number.dart';
 import 'package:callkit_experimental/models/suspecious_number.dart';
+import 'package:callkit_experimental/services/api_services.dart';
 import 'package:callkit_experimental/utils/utils.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
-List<SuspeciousNumber> sampleDatas = [
-  SuspeciousNumber(title: "ลุงโฟน", number: "0910533948"),
-  SuspeciousNumber(title: "Phone 2", number: "0910533949"),
-  SuspeciousNumber(title: "Phone 3", number: "0910533950"),
-  SuspeciousNumber(title: "โรซี่ มิจฉาชีพ (หลอกผู้ชาย)", number: "0910533951"),
-];
+List<SuspeciousNumber> sampleDatas = [];
 
 class DatabaseService {
   static String _serviceName = "Database";
@@ -24,7 +20,7 @@ class DatabaseService {
       final Directory directory = await getApplicationDocumentsDirectory();
       _db =
           await Isar.open([SuspeciousNumberSchema], directory: directory.path);
-      createSampleData();
+      // createSampleData();
     } catch (err) {
       log(err.toString());
       throw Exception("Exception : Failed to connect with service");
@@ -63,9 +59,77 @@ class DatabaseService {
           .filter()
           .numberMatches(number)
           .findFirst();
+
+      if (result == null) {
+        return SuspeciousNumber(title: number, number: number);
+      }
+
       return result;
     } catch (err) {
+      log("err");
       rethrow;
+    }
+  }
+
+//   final existingPerson = await isar.writeTxn((isar) async {
+//   // Check if a person with the same name exists
+//   return isar.persons.where().nameEqualTo(person.name).findFirst();
+// });
+
+  static Future<bool> findExisting(String number, String title) async {
+    final SuspeciousNumber? res = await _db.writeTxn(() async {
+      return _db
+          .collection<SuspeciousNumber>()
+          .where()
+          .filter()
+          .numberEqualTo(number)
+          .titleEqualTo(title)
+          .findFirst();
+    });
+    if (res != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static checkForUpdate() async {
+    log('check for update');
+    final bool canUpdate = await ApiServices.getVersion();
+    if (true == canUpdate) {
+      List<CallerNumber> response = await ApiServices.getUpdate();
+      final List<SuspeciousNumber> store =
+          await _db.collection<SuspeciousNumber>().where().findAll();
+
+      if (true == store.isEmpty) {
+        // Store is Empty
+        // log("Start From Empty");
+        for (CallerNumber caller in response) {
+          await _db.writeTxn(() async {
+            await _db.collection<SuspeciousNumber>().put(
+                SuspeciousNumber(title: caller.title!, number: caller.number!));
+          });
+        }
+      } else {
+        // log("Start From Existing");
+        for (CallerNumber callerNumber in response) {
+          log(callerNumber.title.toString());
+          if (callerNumber.number != null) {
+            final bool isExist =
+                await findExisting(callerNumber.number!, callerNumber.title!);
+            if (!isExist) {
+              await _db.writeTxn(() async {
+                await _db.collection<SuspeciousNumber>().put(SuspeciousNumber(
+                    title: callerNumber.title!, number: callerNumber.number!));
+              });
+            }
+          } else {
+            throw Exception("Error!");
+          }
+        }
+      }
+    } else {
+      return;
     }
   }
 }

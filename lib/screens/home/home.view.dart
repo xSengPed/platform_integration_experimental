@@ -1,8 +1,5 @@
-import 'dart:developer';
-
-import 'package:callkit_experimental/screens/home/calling_page.dart';
 import 'package:callkit_experimental/screens/home/home.vm.dart';
-import 'package:callkit_experimental/services/callkit_service.dart';
+import 'package:callkit_experimental/services/api_services.dart';
 import 'package:callkit_experimental/services/database_service.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +16,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       vm.init();
+      DatabaseService.checkForUpdate();
     });
     super.initState();
   }
@@ -32,7 +30,9 @@ class _HomeViewState extends State<HomeView> {
           children: [
             ElevatedButton(
                 onPressed: () async {
-                  CallKitService.incommingTest("0910533951");
+                  // CallKitService.incommingTest("0910533948");
+
+                  await ApiServices.getUpdate();
                 },
                 child: Text("Call")),
           ],
