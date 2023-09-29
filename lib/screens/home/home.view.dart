@@ -1,6 +1,7 @@
 import 'package:callkit_experimental/screens/home/home.vm.dart';
 import 'package:callkit_experimental/services/api_services.dart';
 import 'package:callkit_experimental/services/database_service.dart';
+import 'package:callkit_experimental/services/native_service.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
@@ -16,7 +17,7 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       vm.init();
-      DatabaseService.checkForUpdate();
+      // DatabaseService.checkForUpdate();
     });
     super.initState();
   }
@@ -32,9 +33,18 @@ class _HomeViewState extends State<HomeView> {
                 onPressed: () async {
                   // CallKitService.incommingTest("0910533948");
 
-                  await ApiServices.getUpdate();
+                  // await ApiServices.getUpdate();
                 },
                 child: Text("Call")),
+            ElevatedButton(
+                onPressed: () async {
+                  // CallKitService.incommingTest("0910533948");
+
+                  // await ApiServices.getUpdate();
+                  NativeService.getBatteryLevel();
+                  NativeService.getMul();
+                },
+                child: Text("Call Native")),
           ],
         ),
       ),
