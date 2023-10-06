@@ -1,77 +1,88 @@
 import UIKit
 import Flutter
+import Reachability
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-      let channel : String = "callkit.flutter.dev"
-      let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-      let batteryChannel = FlutterMethodChannel(name : "\(channel)/battery",binaryMessenger: controller.binaryMessenger)
-      let messageChannel = FlutterMethodChannel(name : "\(channel)/message", binaryMessenger: controller.binaryMessenger)
-      
-      
-      
-      batteryChannel.setMethodCallHandler({
-        [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
         
-        guard call.method == "getBatteryLevel" else {
-          result(FlutterMethodNotImplemented)
-          return
-        }
-        self?.receiveBatteryLevel(result: result)
-      })
-      
-      messageChannel.setMethodCallHandler({
-          [weak self] (call: FlutterMethodCall, result: FlutterResult) -> Void in
-          
-          
-          if (call.method == "getMessageFromSwift") {
-              self?.sendMessageToDart(result: result)
-          }
-          
-          if (call.method == "getMultiplyFromSwift") {
-              if let args = call.arguments as? Dictionary<String,Any>,
-                    let numA = args["a"] as? Int,
-                    let numB = args["b"] as? Int {
-                  self?.multiplyOnSwift(result: result, a: numA, b: numB)
-              } else {
-                  result(FlutterMethodNotImplemented)
-              }
-          }
-
-      })
-      
-    
-      
-      GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-    
-  private func receiveBatteryLevel(result: FlutterResult) {
-  let device = UIDevice.current
-  device.isBatteryMonitoringEnabled = true
-  if device.batteryState == UIDevice.BatteryState.unknown {
-    result(FlutterError(code: "UNAVAILABLE",
-                        message: "Battery level not available.",
-                        details: nil))
-  } else {
-    result(Int(device.batteryLevel * 100))
-  }
-}
-
-    
-    private func sendMessageToDart(result : FlutterResult) {
-        result("Hello From Swift")
+        // MARK : - Initialize Channel Name
+        let channel : String = "callkit.flutter.dev"
+        let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
+        // MARK : - Channel Handler SetUp Session
+        let messageChannel = FlutterMethodChannel(name : "\(channel)/message", binaryMessenger: controller.binaryMessenger)
+        // MARK : - Set UP [MESSAGE_CHANNEL] Method Handler
+        messageChannel.setMethodCallHandler({
+            (call :FlutterMethodCall , result : FlutterResult) -> Void in
+            guard call.method == "getMessage" else {
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            // MARK : - Call GetMessage Function
+            self.getMessage(result: result)
+        })
+        
+        let networkChannel = FlutterMethodChannel(name : "\(channel)/network", binaryMessenger: controller.binaryMessenger)
+        // MARK : - Set UP [NETWORK_CHANNEL] Method Handler
+        networkChannel.setMethodCallHandler({
+            (call : FlutterMethodCall , result : FlutterResult) -> Void in
+            guard call.method == "getNetworkStatus" else {
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            let networkInfo = Reachability.shared.currentPath
+            result(networkInfo.isReachable)
+        })
+        
+        let computeChannel = FlutterMethodChannel(name : "\(channel)/compute",binaryMessenger: controller.binaryMessenger)
+        // MARK : - Set UP [COMPUTE_CHANNEL] Method Handler
+        computeChannel.setMethodCallHandler({
+            (call : FlutterMethodCall , result : FlutterResult) -> Void in
+            
+            let operands : [String] = ["+","-","*","/"]
+            
+            guard call.method == "getCompute" else {
+                result(FlutterMethodNotImplemented)
+                return
+            }
+            guard 
+                let args = call.arguments as? Dictionary<String, Any> ,
+                let x = args["x"] as? Double,
+                let y = args["y"] as? Double,
+                let operand = args["operand"] as? String
+            else {
+                result("Exception : Invalid Argument")
+                return
+            }
+            
+            guard operands.contains(operand) else {
+                result("Exception : Invalid Operand")
+                return
+            }
+            switch operand {
+            case "+":
+                result(x+y)
+            case "-":
+                result(x-y)
+            case "*":
+                result(x*y)
+            case "/":
+                result(x/y)
+            default:
+                result("Exception : Invalid Operand")
+            }
+            
+        })
+                
+        GeneratedPluginRegistrant.register(with: self)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    
-    private func multiplyOnSwift(result : FlutterResult , a : Int , b : Int) {
-        
-        
-        result(a*b)
-        
+    private func getMessage(result : FlutterResult) -> Void {
+        result("Get Message From iOS")
     }
+
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class HomeViewModel extends ChangeNotifier {
   late BuildContext context;
   SuspeciousNumber? suspeciousNumber;
+  String result = "";
   HomeViewModel() {}
 
   void init() async {
@@ -13,6 +14,11 @@ class HomeViewModel extends ChangeNotifier {
 
   void findNumber(String number) async {
     suspeciousNumber = await DatabaseService.findByNumber(number);
+    notifyListeners();
+  }
+
+  void updateResult(String result) {
+    this.result = result;
     notifyListeners();
   }
 }

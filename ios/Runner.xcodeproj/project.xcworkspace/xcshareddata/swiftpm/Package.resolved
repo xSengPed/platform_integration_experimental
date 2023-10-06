@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "reachability",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alecrim/Reachability.git",
+      "state" : {
+        "revision" : "33d2cf1dc5c5962683b6fc913ac652ebc4d6c8e1",
+        "version" : "1.2.1"
+      }
+    }
+  ],
+  "version" : 2
+}

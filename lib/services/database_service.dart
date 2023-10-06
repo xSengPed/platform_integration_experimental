@@ -132,4 +132,13 @@ class DatabaseService {
       return;
     }
   }
+
+  static Future<List<SuspeciousNumber>> getAllNumber() async {
+    try {
+      final result = await _db.collection<SuspeciousNumber>().where().findAll();
+      return result;
+    } catch (e) {
+      return [];
+    }
+  }
 }
