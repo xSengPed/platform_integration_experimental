@@ -1,6 +1,9 @@
-# callkit_experimental
+# Platform Integration 
 
-A new Flutter project.
+for ios AppDelegate.swift
+
+for android MainActivity.kt
+
 
 ## Getting Started
 
