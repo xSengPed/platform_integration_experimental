@@ -26,7 +26,7 @@ class NativeService {
     }
   }
 
-  static Future<String> getCompute(int x, int y, String operand) async {
+  static Future<String> getCompute(double x, double y, String operand) async {
     const platform = MethodChannel("callkit.flutter.dev/compute");
 
     try {

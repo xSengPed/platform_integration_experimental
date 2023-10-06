@@ -130,8 +130,7 @@ class _HomeViewState extends State<HomeView> {
                             ),
                             onPressed: () async {
                               final result =
-                                  await NativeService.getCompute(10, 20, "-");
-
+                                  await NativeService.getCompute(10, 20, "*");
                               con.updateResult(result);
                             }),
                       ),
