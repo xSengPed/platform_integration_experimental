@@ -7,9 +7,17 @@ import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
 import 'package:flutter_callkit_incoming/entities/ios_params.dart';
 import 'package:flutter_callkit_incoming/entities/notification_params.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:flutter_callkit_voximplant/flutter_callkit_voximplant.dart';
 import 'package:uuid/uuid.dart';
 
 class CallKitService {
+  static FCXProvider provider = FCXProvider();
+
+  static Future<void> performIncomingCall(String contact, String uuid) async {
+    FCXCallUpdate callUpdate = FCXCallUpdate(localizedCallerName: contact);
+    await provider.reportNewIncomingCall(uuid, callUpdate);
+  }
+
   static incommingTest(String number) async {
     log("call");
     String currentUuid;

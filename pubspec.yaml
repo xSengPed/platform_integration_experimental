@@ -20,6 +20,8 @@ dependencies:
   uuid: ^4.0.0
   permission_handler: ^11.0.0
   dio: ^5.3.3
+  phone_state: ^1.0.3
+  flutter_callkit_voximplant: ^2.1.0
 
 dev_dependencies:
   build_runner: ^2.4.6

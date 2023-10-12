@@ -1,8 +1,17 @@
+import 'dart:developer';
+
 import 'package:callkit_experimental/components/my_button.dart';
+import 'package:callkit_experimental/screens/home/calling_page_android.dart';
 import 'package:callkit_experimental/screens/home/home.vm.dart';
 import 'package:callkit_experimental/screens/home/number.view.dart';
+import 'package:callkit_experimental/services/call_service.dart';
+import 'package:callkit_experimental/services/callkit_service.dart';
 import 'package:callkit_experimental/services/native_service.dart';
+import 'package:callkit_experimental/services/permission_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_callkit_incoming/entities/call_event.dart';
+import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -14,13 +23,42 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   HomeViewModel vm = HomeViewModel();
+
+  final CallService _callService = CallService();
   @override
   void initState() {
+    PermissionService.requestIncommingCallPerm();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       vm.init();
       // DatabaseService.checkForUpdate();
     });
+
     super.initState();
+  }
+
+  void onEvent(CallEvent event) {
+    if (!mounted) return;
+
+    print("${event.toString()}\n");
+    setState(() {
+      // textEvents += '${event.toString()}\n';
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> listenEvent(void Function(CallEvent) callback) async {
+    try {
+      FlutterCallkitIncoming.onEvent.listen((event) async {
+        print(event.toString());
+        // print(event.body.toString());
+      });
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override
@@ -49,7 +87,13 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Expanded(
                         child: MyButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CallingPageAndroid(),
+                                ));
+                          },
                           child: Text(
                             "Call (Android)",
                             style: TextStyle(
@@ -62,9 +106,98 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       Expanded(
                         child: MyButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            // CallKitService.performIncomingCall("1111", "1112");
+                            await _callService
+                                .emulateIncomingCall('0910533948');
+                          },
                           child: Text(
                             "Call Test (iOS)",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(
+                    height: 8,
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyButton(
+                          onPressed: () async {
+                            _callService.openSettings();
+                          },
+                          child: Text(
+                            "Open Setting",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyButton(
+                          onPressed: () async {
+                            final res = await _callService.getBlockedNumbers();
+
+                            log(res.toString());
+                          },
+                          child: Text(
+                            "Get Blocking",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyButton(
+                          onPressed: () async {
+                            final res = await _callService
+                                .addBlockedNumber("0876269686");
+                          },
+                          child: Text(
+                            "Send Blocking",
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MyButton(
+                          onPressed: () async {
+                            final res = await _callService.addIdentifiedNumber(
+                                "0910533948", "phone_test");
+                          },
+                          child: Text(
+                            "Send Identifier",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 16),
                           ),
