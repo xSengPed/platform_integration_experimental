@@ -1,79 +1,46 @@
-import 'dart:developer';
-
-import 'package:callkit_experimental/models/suspecious_number.dart';
-import 'package:callkit_experimental/services/database_service.dart';
-import 'package:flutter_callkit_incoming/entities/android_params.dart';
-import 'package:flutter_callkit_incoming/entities/call_kit_params.dart';
-import 'package:flutter_callkit_incoming/entities/ios_params.dart';
-import 'package:flutter_callkit_incoming/entities/notification_params.dart';
-import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_callkit_voximplant/flutter_callkit_voximplant.dart';
 import 'package:uuid/uuid.dart';
 
 class CallKitService {
-  static FCXProvider provider = FCXProvider();
-
-  static Future<void> performIncomingCall(String contact, String uuid) async {
-    FCXCallUpdate callUpdate = FCXCallUpdate(localizedCallerName: contact);
-    await provider.reportNewIncomingCall(uuid, callUpdate);
+  static late FCXProvider provider;
+  static late FCXCallController controller;
+  static late FCXPlugin plugin;
+  CallKitService.init() {
+    provider = FCXProvider();
+    controller = FCXCallController();
+    plugin = FCXPlugin();
   }
 
-  static incommingTest(String number) async {
-    log("call");
-    String currentUuid;
-    currentUuid = Uuid().v4();
+  static Future<void> triggerIncomingCall() async {
+    FCXCallUpdate callUpdate = FCXCallUpdate(
+      remoteHandle: FCXHandle(FCXHandleType.PhoneNumber, "0910533948"),
+      supportsGrouping: false,
+      supportsUngrouping: false,
+      supportsHolding: true,
+      supportsDTMF: true,
+      hasVideo: false,
+    );
+    await provider.reportNewIncomingCall(Uuid().v4(), callUpdate);
+  }
 
-    SuspeciousNumber? suspeciousNumber =
-        await DatabaseService.findByNumber(number);
+  static Future<void> addBlockedNumber(String number) async {
+    int num = int.parse(number);
+    await plugin.addBlockedPhoneNumbers([FCXCallDirectoryPhoneNumber(num)]);
+  }
 
-    if (suspeciousNumber != null) {
-      CallKitParams callKitParams = CallKitParams(
-        id: currentUuid,
-        nameCaller: suspeciousNumber.title,
-        appName: 'Callkit',
-        avatar: 'https://i.pravatar.cc/100',
-        handle: suspeciousNumber.number,
-        type: 0,
-        textAccept: 'Accept',
-        textDecline: 'Decline',
-        missedCallNotification: NotificationParams(
-          showNotification: true,
-          isShowCallback: true,
-          subtitle: 'Missed call',
-          callbackText: 'Call back',
-        ),
-        duration: 30000,
-        extra: <String, dynamic>{'userId': '1a2b3c4d'},
-        headers: <String, dynamic>{'apiKey': 'Abc@123!', 'platform': 'flutter'},
-        android: const AndroidParams(
-            isCustomNotification: true,
-            isShowLogo: false,
-            ringtonePath: 'system_ringtone_default',
-            backgroundColor: '#0955fa',
-            backgroundUrl: 'https://i.pravatar.cc/500',
-            actionColor: '#4CAF50',
-            incomingCallNotificationChannelName: "Incoming Call",
-            missedCallNotificationChannelName: "Missed Call"),
-        ios: IOSParams(
-          iconName: 'CallKitLogo',
-          handleType: 'generic',
-          supportsVideo: true,
-          maximumCallGroups: 2,
-          maximumCallsPerCallGroup: 1,
-          audioSessionMode: 'default',
-          audioSessionActive: true,
-          audioSessionPreferredSampleRate: 44100.0,
-          audioSessionPreferredIOBufferDuration: 0.005,
-          supportsDTMF: true,
-          supportsHolding: true,
-          supportsGrouping: false,
-          supportsUngrouping: false,
-          ringtonePath: 'system_ringtone_default',
-        ),
-      );
-      await FlutterCallkitIncoming.showCallkitIncoming(callKitParams);
-    } else {
-      return;
-    }
+  static Future<List<String>> getBlockedNumbers() async {
+    List<FCXCallDirectoryPhoneNumber> numbers =
+        await plugin.getBlockedPhoneNumbers();
+    return numbers.map((e) => e.number.toString()).toList();
+  }
+
+  static Future<void> addIdentifiedNumber(String number, String id) async {
+    int num = int.parse(number);
+    var phone = FCXIdentifiablePhoneNumber(num, label: id);
+    await plugin.addIdentifiablePhoneNumbers([phone]);
+  }
+
+  static Future<List<FCXIdentifiablePhoneNumber>> getIdentifiedNumbers() async {
+    return await plugin.getIdentifiablePhoneNumbers();
   }
 }

@@ -28,6 +28,8 @@ import flutter_callkit_voximplant
         // MARK : - Set UP [MESSAGE_CHANNEL] Method Handler
         messageChannel.setMethodCallHandler({
             (call :FlutterMethodCall , result : FlutterResult) -> Void in
+            
+            print("[Native] - \(call.method)")
             guard call.method == "getMessage" else {
                 result(FlutterMethodNotImplemented)
                 return
@@ -39,7 +41,9 @@ import flutter_callkit_voximplant
         let networkChannel = FlutterMethodChannel(name : "\(channel)/network", binaryMessenger: controller.binaryMessenger)
         // MARK : - Set UP [NETWORK_CHANNEL] Method Handler
         networkChannel.setMethodCallHandler({
+            
             (call : FlutterMethodCall , result : FlutterResult) -> Void in
+            print("[Native] - \(call.method)")
             guard call.method == "getNetworkStatus" else {
                 result(FlutterMethodNotImplemented)
                 return
@@ -52,6 +56,7 @@ import flutter_callkit_voximplant
         // MARK : - Set UP [COMPUTE_CHANNEL] Method Handler
         computeChannel.setMethodCallHandler({
             (call : FlutterMethodCall , result : FlutterResult) -> Void in
+            print("[Native] - \(call.method)")
             
             let operands : [String] = ["+","-","*","/"]
             
@@ -129,6 +134,17 @@ import flutter_callkit_voximplant
                 }
             }
         }
+        
+        callKitPlugin.didAddIdentifiablePhoneNumbers = { [weak self] numbers in
+             guard let self = self else { return }
+             self.identifiedNumbers.append(
+                 contentsOf: numbers.map { IdentifiableNumber(identifiableNumber: $0) }
+             )
+             self.identifiedNumbers.sort()
+         }
+
+
+        
         
         
         

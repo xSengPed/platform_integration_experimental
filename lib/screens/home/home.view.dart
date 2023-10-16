@@ -1,6 +1,6 @@
 import 'dart:developer';
-
 import 'package:callkit_experimental/components/my_button.dart';
+import 'package:callkit_experimental/screens/blocking_and_idf.view.dart';
 import 'package:callkit_experimental/screens/home/calling_page_android.dart';
 import 'package:callkit_experimental/screens/home/home.vm.dart';
 import 'package:callkit_experimental/screens/home/number.view.dart';
@@ -11,7 +11,6 @@ import 'package:callkit_experimental/services/permission_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_callkit_incoming/entities/call_event.dart';
 import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
@@ -108,8 +107,7 @@ class _HomeViewState extends State<HomeView> {
                         child: MyButton(
                           onPressed: () async {
                             // CallKitService.performIncomingCall("1111", "1112");
-                            await _callService
-                                .emulateIncomingCall('0910533948');
+                            await CallKitService.triggerIncomingCall();
                           },
                           child: Text(
                             "Call Test (iOS)",
@@ -150,12 +148,15 @@ class _HomeViewState extends State<HomeView> {
                       Expanded(
                         child: MyButton(
                           onPressed: () async {
-                            final res = await _callService.getBlockedNumbers();
-
-                            log(res.toString());
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      BlockingAndIdentifyView(),
+                                ));
                           },
                           child: Text(
-                            "Get Blocking",
+                            "Go Blocking and Identify",
                             style: TextStyle(
                                 fontWeight: FontWeight.w600, fontSize: 16),
                           ),
@@ -167,44 +168,6 @@ class _HomeViewState extends State<HomeView> {
                     height: 8,
                   ),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyButton(
-                          onPressed: () async {
-                            final res = await _callService
-                                .addBlockedNumber("0876269686");
-                          },
-                          child: Text(
-                            "Send Blocking",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MyButton(
-                          onPressed: () async {
-                            final res = await _callService.addIdentifiedNumber(
-                                "0910533948", "phone_test");
-                          },
-                          child: Text(
-                            "Send Identifier",
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600, fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16.0),
                     child: Text(
