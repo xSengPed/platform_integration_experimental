@@ -5,7 +5,7 @@ import 'package:callkit_experimental/screens/calling_page_android.dart';
 
 import 'package:callkit_experimental/screens/home/home.vm.dart';
 import 'package:callkit_experimental/screens/home/number.view.dart';
-import 'package:callkit_experimental/services/call_service.dart';
+
 import 'package:callkit_experimental/services/callkit_service.dart';
 import 'package:callkit_experimental/services/native_service.dart';
 import 'package:callkit_experimental/services/permission_service.dart';
@@ -24,12 +24,12 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   HomeViewModel vm = HomeViewModel();
 
-  final CallService _callService = CallService();
   @override
   void initState() {
     PermissionService.requestIncommingCallPerm();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       vm.init();
+      CallKitService.configure();
       // DatabaseService.checkForUpdate();
     });
 
@@ -128,9 +128,7 @@ class _HomeViewState extends State<HomeView> {
                     children: [
                       Expanded(
                         child: MyButton(
-                          onPressed: () async {
-                            _callService.openSettings();
-                          },
+                          onPressed: () async {},
                           child: Text(
                             "Open Setting",
                             style: TextStyle(

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter_callkit_voximplant/flutter_callkit_voximplant.dart';
+
 import 'package:uuid/uuid.dart';
 
 class CallKitService {
@@ -9,6 +12,17 @@ class CallKitService {
     provider = FCXProvider();
     controller = FCXCallController();
     plugin = FCXPlugin();
+    log('init callkit');
+    controller.callObserver.callChanged = (call) {
+      log('on call : ${call.hasConnected}');
+      ;
+    };
+  }
+
+  static configure() async {
+    provider.performAnswerCallAction = (answerCallAction) async {
+      log("Perform Action");
+    };
   }
 
   static Future<void> triggerIncomingCall() async {

@@ -9,6 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ApiServices.init();
   CallKitService.init();
+
   DatabaseService.init();
 
   runApp(AppMain());
