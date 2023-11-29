@@ -53,18 +53,11 @@ class DatabaseService {
 
   static Future<void> createNew(String number, String title) async {
     try {
-      int itemCount = await _db.collection<SuspeciousNumber>().count();
-      if (itemCount == 0) {
-        serviceLog("$_serviceName", "Create Sample Datas");
-        await _db.writeTxn(() async {
-          await _db
-              .collection<SuspeciousNumber>()
-              .put(SuspeciousNumber(title: title, number: number));
-        });
-      } else {
-        return;
-        // throw Exception("Exception : Failed to Create Sample Datas");
-      }
+      await _db.writeTxn(() async {
+        await _db
+            .collection<SuspeciousNumber>()
+            .put(SuspeciousNumber(title: title, number: number));
+      });
     } catch (err) {
       rethrow;
     }

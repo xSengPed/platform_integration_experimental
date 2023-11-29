@@ -98,6 +98,9 @@ class _NumberViewState extends State<NumberView> {
                                           onPressed: () {
                                             vm.add(telController.text,
                                                 titleController.text);
+
+                                            telController.clear();
+                                            titleController.clear();
                                             Navigator.pop(context);
                                           },
                                           child: Text("Confirm"))
