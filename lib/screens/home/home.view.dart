@@ -53,9 +53,11 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
-    setStream();
+    requestPermission();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       vm.init();
+      setStream();
       // DatabaseService.checkForUpdate();
     });
 
