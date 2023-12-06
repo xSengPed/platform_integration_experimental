@@ -12,7 +12,7 @@ class MyButton extends StatelessWidget {
       height: 50,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green[700],
+          backgroundColor: Colors.blue[900],
           elevation: 0,
         ),
         onPressed: onPressed,

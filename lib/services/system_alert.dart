@@ -2,6 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:system_alert_window/system_alert_window.dart';
 
 class SystemAlert {
+  SystemAlert.initializeSetting() {}
+
+  @pragma('vm:entry-point')
+  static void callBackFunction(String tag) {
+    switch (tag) {
+      case "simple_button":
+        print("Simple button has been clicked");
+        break;
+      case "focus_button":
+        print("Focus button has been clicked");
+        break;
+      case "close_btn":
+        print("close_btn button has been clicked");
+        SystemAlertWindow.closeSystemWindow();
+        break;
+      default:
+        print("OnClick event of $tag");
+    }
+  }
+
   static SystemWindowHeader header = SystemWindowHeader(
       title: SystemWindowText(
           text: "Incoming Call", fontSize: 10, textColor: Colors.black45),
@@ -18,7 +38,7 @@ class SystemAlert {
           tag: "close_btn"),
       buttonPosition: ButtonPosition.TRAILING);
 
-  SystemWindowHeader getAlert(String telephoneNo, String title) {
+  static SystemWindowHeader getAlert(String telephoneNo, String title) {
     return SystemWindowHeader(
         title: SystemWindowText(
             text: "Incoming Call", fontSize: 10, textColor: Colors.black45),

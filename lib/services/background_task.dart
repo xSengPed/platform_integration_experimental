@@ -39,6 +39,6 @@ void onStart(ServiceInstance service) {
         gravity: SystemWindowGravity.CENTER,
         margin: SystemWindowMargin(top: 100),
         prefMode: SystemWindowPrefMode.OVERLAY,
-        header: SystemAlert().getAlert(event.number.toString(), "TEST CALL"));
+        header: SystemAlert.getAlert(event.number.toString(), "TEST CALL"));
   });
 }

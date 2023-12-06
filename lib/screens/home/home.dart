@@ -1,11 +1,8 @@
-import 'dart:developer';
-import 'dart:isolate';
-
-import 'package:callkit_experimental/services/system_alert.dart';
+import 'package:callkit_experimental/components/caller_ident.dart';
+import 'package:callkit_experimental/components/my_button.dart';
+import 'package:callkit_experimental/screens/home/view_model/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:phone_state/phone_state.dart';
-import 'package:system_alert_window/system_alert_window.dart';
+import 'package:provider/provider.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -15,99 +12,153 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  Future<bool> requestPermission() async {
-    var status = await Permission.phone.request();
-    return switch (status) {
-      PermissionStatus.denied ||
-      PermissionStatus.restricted ||
-      PermissionStatus.limited ||
-      PermissionStatus.permanentlyDenied =>
-        false,
-      PermissionStatus.provisional || PermissionStatus.granted => true,
-    };
-  }
-
-  // void setStream() {
-  //   PhoneState.stream.listen((event) {
-  //     log(event.status.name);
-  //   });
-  // }
-
-  Future<void> _requestPermissions() async {
-    await SystemAlertWindow.requestPermissions(
-        prefMode: SystemWindowPrefMode.DEFAULT);
-  }
+  late HomeViewModel _viewModel = HomeViewModel(context);
 
   @override
   void initState() {
-    // setStream();
-
+    _viewModel.requestPermission();
     super.initState();
-    requestPermission();
-    _requestPermissions();
-  }
-
-  @pragma('vm:entry-point')
-  void callBackFunction(String tag) {
-    WidgetsFlutterBinding.ensureInitialized();
-    switch (tag) {
-      case "simple_button":
-        print("Simple button has been clicked");
-        break;
-      case "focus_button":
-        print("Focus button has been clicked");
-        break;
-      case "personal_btn":
-        print("Personal button has been clicked");
-        SystemAlertWindow.closeSystemWindow();
-        break;
-      default:
-        print("OnClick event of $tag");
-    }
-  }
-
-  void show() {
-    SystemAlertWindow.showSystemWindow(
-      header: SystemAlert.header,
-      // body: SystemAlert.body,
-      // footer: SystemAlert.footer,
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () async {
-                  await SystemAlertWindow.requestPermissions(
-                      prefMode: SystemWindowPrefMode.OVERLAY);
-                  // SystemAlertWindow.showSystemWindow(header: header);
-
-                  SystemAlertWindow.showSystemWindow(
-                      height: 100,
-                      width: (MediaQuery.of(context).size.width * 0.9).toInt(),
-                      header: SystemAlert.header,
-                      // body: SystemAlert.body,
-                      // footer: SystemAlert.footer,
-                      margin: SystemWindowMargin(
-                          left: 8, right: 8, top: 100, bottom: 0),
-                      gravity: SystemWindowGravity.TOP,
-                      // notificationTitle: "Incoming Call",
-                      // notificationBody: "+1 646 980 4741",
-                      prefMode: SystemWindowPrefMode.DEFAULT);
-                },
-                child: Text("Show")),
-            ElevatedButton(
-                onPressed: () async {
-                  SystemAlertWindow.closeSystemWindow();
-                },
-                child: Text("test")),
-          ],
-        ),
+    return ChangeNotifierProvider(
+      create: (context) => _viewModel,
+      child: Consumer<HomeViewModel>(
+        builder: (context, vm, child) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text("Exvention : Whocalls POC"),
+              elevation: 0,
+            ),
+            backgroundColor: Colors.blue[900],
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Phone Status"),
+                                  Spacer(),
+                                  Text(
+                                      "${vm.isPhonePermGranted.toString().toUpperCase()}"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("System Alert Status"),
+                                  Spacer(),
+                                  Text(
+                                      "${vm.isSystemAlertGranted.toString().toUpperCase()}")
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Flexible(
+                    child: vm.numbers.length == 0
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Container(
+                              color: Colors.white,
+                              child: Center(
+                                  child: Text(
+                                "No Numbers Data",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              )),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: ListView.builder(
+                              itemCount: vm.numbers.length,
+                              itemBuilder: (context, index) {
+                                return CallerIndentityCard(
+                                  caller: vm.numbers[index],
+                                  onTapDelete: () =>
+                                      vm.deleteNumber(vm.numbers[index].number),
+                                );
+                              },
+                            ),
+                          )),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  color: Colors.white,
+                  child: MyButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            padding: const EdgeInsets.all(16),
+                            child: Form(
+                              key: vm.formKey,
+                              child: Column(children: [
+                                TextFormField(
+                                  controller: vm.titleController,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "required fied";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                TextFormField(
+                                  controller: vm.numberController,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 10,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return "required fied";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                Spacer(),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: MyButton(
+                                        onPressed: () {
+                                          vm.submitNewNumber();
+                                        },
+                                        child: Text("Submit"),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ]),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Text("Create New Number"),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
       ),
     );
   }

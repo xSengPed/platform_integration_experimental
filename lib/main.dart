@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:callkit_experimental/services/api_services.dart';
 import 'package:callkit_experimental/services/background_task.dart';
@@ -12,31 +11,11 @@ import 'screens/home/home.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  SystemAlertWindow.registerOnClickListener(SystemAlert.callBackFunction);
   ApiServices.init();
   DatabaseService.init();
-  // SystemAlert.initConfig();
   await initializeService();
-  SystemAlertWindow.registerOnClickListener(callBackFunction);
   runApp(AppMain());
-}
-
-@pragma('vm:entry-point')
-void callBackFunction(String tag) {
-  switch (tag) {
-    case "simple_button":
-      print("Simple button has been clicked");
-      break;
-    case "focus_button":
-      print("Focus button has been clicked");
-      break;
-    case "close_btn":
-      print("close_btn button has been clicked");
-      SystemAlertWindow.closeSystemWindow();
-      break;
-    default:
-      print("OnClick event of $tag");
-  }
 }
 
 class AppMain extends StatefulWidget {
