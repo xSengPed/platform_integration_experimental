@@ -49,7 +49,12 @@ class _HomeViewState extends State<HomeView> {
                             children: [
                               Row(
                                 children: [
-                                  Text("Phone Status"),
+                                  Text(
+                                    "Phone Status",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                   Spacer(),
                                   Text(
                                       "${vm.isPhonePermGranted.toString().toUpperCase()}"),
@@ -57,7 +62,12 @@ class _HomeViewState extends State<HomeView> {
                               ),
                               Row(
                                 children: [
-                                  Text("System Alert Status"),
+                                  Text(
+                                    "System Alert Status",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                   Spacer(),
                                   Text(
                                       "${vm.isSystemAlertGranted.toString().toUpperCase()}")

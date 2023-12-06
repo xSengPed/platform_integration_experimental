@@ -20,17 +20,16 @@ class DatabaseService {
       final Directory directory = await getApplicationDocumentsDirectory();
       _db =
           await Isar.open([SuspeciousNumberSchema], directory: directory.path);
-      // createSampleData();
     } catch (err) {
       log(err.toString());
       throw Exception("Exception : Failed to connect with service");
     }
   }
 
-  DatabaseService.init() {
-    serviceLog("$_serviceName", "Setting Up");
-    setUp();
-  }
+  // DatabaseService.init() {
+  //   serviceLog("$_serviceName", "Setting Up");
+  //   setUp();
+  // }
 
   static Future<void> createSampleData() async {
     try {
