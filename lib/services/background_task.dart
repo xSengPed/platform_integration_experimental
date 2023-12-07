@@ -4,9 +4,11 @@ import 'dart:ui';
 
 import 'package:callkit_experimental/models/suspecious_number.dart';
 import 'package:callkit_experimental/services/database_service.dart';
+import 'package:callkit_experimental/services/system_alert.dart';
 
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:phone_state/phone_state.dart';
+import 'package:system_alert_window/system_alert_window.dart';
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
@@ -42,11 +44,7 @@ void onStart(ServiceInstance service) async {
     log(result?.title ?? "-");
     log(result?.number ?? "-");
 
-    // SystemAlertWindow.showSystemWindow(
-    //     gravity: SystemWindowGravity.CENTER,
-    //     margin: SystemWindowMargin(top: 100),
-    //     prefMode: SystemWindowPrefMode.OVERLAY,
-    //     header:
-    //         SystemAlert.getAlert(result?.number ?? "", result?.title ?? ""));
+    SystemAlert.showIncomingCallerNotify(
+        callerId: result?.title ?? "-", number: result?.number ?? "-");
   });
 }

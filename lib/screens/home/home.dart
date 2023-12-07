@@ -1,6 +1,8 @@
 import 'package:callkit_experimental/components/caller_ident.dart';
 import 'package:callkit_experimental/components/my_button.dart';
 import 'package:callkit_experimental/screens/home/view_model/home_viewmodel.dart';
+import 'package:callkit_experimental/services/system_alert.dart';
+import 'package:dash_bubble/dash_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -107,6 +109,11 @@ class _HomeViewState extends State<HomeView> {
                               },
                             ),
                           )),
+                ElevatedButton(
+                    onPressed: () {
+                      SystemAlert.showIncomingCallerNotify();
+                    },
+                    child: Text("Show ALert")),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(24),

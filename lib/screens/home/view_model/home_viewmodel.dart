@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:callkit_experimental/models/suspecious_number.dart';
 import 'package:callkit_experimental/services/database_service.dart';
 import 'package:callkit_experimental/utils/utils.dart';
+import 'package:dash_bubble/dash_bubble.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewModel extends ChangeNotifier {
@@ -25,6 +26,7 @@ class HomeViewModel extends ChangeNotifier {
     try {
       isPhonePermGranted = await Utils.requestPhomePermissionStatus();
       isSystemAlertGranted = await Utils.requestSyetemAlertWindowPermission();
+      DashBubble.instance.requestOverlayPermission();
       notifyListeners();
     } catch (err) {
       log(err.toString());

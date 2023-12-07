@@ -22,37 +22,51 @@ class SystemAlert {
     }
   }
 
-  static SystemWindowHeader header = SystemWindowHeader(
-      title: SystemWindowText(
-          text: "Incoming Call", fontSize: 10, textColor: Colors.black45),
-      padding: SystemWindowPadding.setSymmetricPadding(12, 12),
-      subTitle: SystemWindowText(
-          text: "9898989899",
-          fontSize: 14,
-          fontWeight: FontWeight.BOLD,
-          textColor: Colors.black87),
-      decoration: SystemWindowDecoration(startColor: Colors.grey[100]),
-      button: SystemWindowButton(
-          text: SystemWindowText(
-              text: "Close", fontSize: 10, textColor: Colors.black45),
-          tag: "close_btn"),
-      buttonPosition: ButtonPosition.TRAILING);
-
-  static SystemWindowHeader getAlert(String telephoneNo, String title) {
-    return SystemWindowHeader(
-        title: SystemWindowText(
-            text: "Incoming Call", fontSize: 10, textColor: Colors.black45),
-        padding: SystemWindowPadding.setSymmetricPadding(12, 12),
-        subTitle: SystemWindowText(
-            text: "$telephoneNo\n$title",
-            fontSize: 14,
-            fontWeight: FontWeight.BOLD,
-            textColor: Colors.black87),
-        decoration: SystemWindowDecoration(startColor: Colors.grey[100]),
-        button: SystemWindowButton(
-            text: SystemWindowText(
-                text: "Close", fontSize: 10, textColor: Colors.black45),
-            tag: "close_btn"),
-        buttonPosition: ButtonPosition.TRAILING);
+  static showIncomingCallerNotify(
+      {String number = "Number", String callerId = "CallerId"}) {
+    SystemAlertWindow.showSystemWindow(
+      // margin: SystemWindowMargin(left: 50),
+      prefMode: SystemWindowPrefMode.DEFAULT,
+      gravity: SystemWindowGravity.CENTER,
+      height: 200,
+      width: 300,
+      header: SystemWindowHeader(
+          title: SystemWindowText(
+        text: "Incoming Call",
+        fontSize: 16,
+        fontWeight: FontWeight.BOLD,
+        textColor: Colors.grey[900],
+        padding: SystemWindowPadding(top: 24, right: 24, left: 24, bottom: 24),
+      )),
+      body: SystemWindowBody(
+          padding: SystemWindowPadding(top: 0, right: 24, left: 24, bottom: 24),
+          rows: [
+            EachRow(columns: [
+              EachColumn(
+                text: SystemWindowText(text: "$number"),
+              )
+            ]),
+            EachRow(columns: [
+              EachColumn(
+                text: SystemWindowText(text: "$callerId"),
+              )
+            ]),
+          ]),
+      footer: SystemWindowFooter(
+          text: SystemWindowText(text: ""),
+          buttonsPosition: ButtonPosition.TRAILING,
+          padding: SystemWindowPadding(top: 0, right: 24, left: 0, bottom: 0),
+          buttons: [
+            SystemWindowButton(
+              width: 30,
+              decoration: SystemWindowDecoration(
+                  startColor: Colors.blue,
+                  borderRadius: 20,
+                  endColor: Colors.amber),
+              text: SystemWindowText(text: "Close", textColor: Colors.white),
+              tag: "close_btn",
+            )
+          ]),
+    );
   }
 }
