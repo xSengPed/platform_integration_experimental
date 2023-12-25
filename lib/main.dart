@@ -1,8 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:callkit_experimental/services/api_services.dart';
 import 'package:callkit_experimental/services/background_task.dart';
-
 import 'package:callkit_experimental/services/system_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:system_alert_window/system_alert_window.dart';
@@ -13,7 +12,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // await DatabaseService.init();
 
-  await SystemAlertWindow.registerOnClickListener(SystemAlert.callBackFunction);
+  if (Platform.isAndroid) {
+    await SystemAlertWindow.registerOnClickListener(
+        SystemAlert.callBackFunction);
+  }
 
   await initializeService();
   runApp(AppMain());

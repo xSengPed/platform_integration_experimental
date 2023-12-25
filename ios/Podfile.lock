@@ -1,8 +1,12 @@
 PODS:
   - CryptoSwift (1.8.0)
   - Flutter (1.0.0)
+  - flutter_background_service_ios (0.0.3):
+    - Flutter
   - flutter_callkit_incoming (0.0.1):
     - CryptoSwift
+    - Flutter
+  - flutter_callkit_voximplant (2.1.0):
     - Flutter
   - isar_flutter_libs (1.0.0):
     - Flutter
@@ -13,14 +17,19 @@ PODS:
     - Flutter
   - phone_state (1.0.3):
     - Flutter
+  - system_alert_window (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
+  - flutter_background_service_ios (from `.symlinks/plugins/flutter_background_service_ios/ios`)
   - flutter_callkit_incoming (from `.symlinks/plugins/flutter_callkit_incoming/ios`)
+  - flutter_callkit_voximplant (from `.symlinks/plugins/flutter_callkit_voximplant/ios`)
   - isar_flutter_libs (from `.symlinks/plugins/isar_flutter_libs/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - phone_state (from `.symlinks/plugins/phone_state/ios`)
+  - system_alert_window (from `.symlinks/plugins/system_alert_window/ios`)
 
 SPEC REPOS:
   trunk:
@@ -29,8 +38,12 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
+  flutter_background_service_ios:
+    :path: ".symlinks/plugins/flutter_background_service_ios/ios"
   flutter_callkit_incoming:
     :path: ".symlinks/plugins/flutter_callkit_incoming/ios"
+  flutter_callkit_voximplant:
+    :path: ".symlinks/plugins/flutter_callkit_voximplant/ios"
   isar_flutter_libs:
     :path: ".symlinks/plugins/isar_flutter_libs/ios"
   path_provider_foundation:
@@ -39,15 +52,20 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   phone_state:
     :path: ".symlinks/plugins/phone_state/ios"
+  system_alert_window:
+    :path: ".symlinks/plugins/system_alert_window/ios"
 
 SPEC CHECKSUMS:
   CryptoSwift: 52aaf3fce7337552863b1d952e408085f0e65030
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  flutter_background_service_ios: e30e0d3ee69e4cee66272d0c78eacd48c2e94aac
   flutter_callkit_incoming: 417dd1b46541cdd5d855ad795ccbe97d1c18155e
+  flutter_callkit_voximplant: 9e1128135757ea8a21ae7bbc06ff4a37e906ccc5
   isar_flutter_libs: b69f437aeab9c521821c3f376198c4371fa21073
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   phone_state: d0d36ac85a7cc06ed62e88343795ed5cd7e3d6c9
+  system_alert_window: a66510ec18ad7ef4987eff00b6f5ad5d13093910
 
 PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
 

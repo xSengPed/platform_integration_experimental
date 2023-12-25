@@ -185,6 +185,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  dash_bubble:
+    dependency: "direct main"
+    description:
+      name: dash_bubble
+      sha256: a331ac641bf4cc42d75c9501566a88e9ce9a64a54cacf04e6c05f974328c895a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   dio:
     dependency: "direct main"
     description:
@@ -270,6 +278,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0+2"
+  flutter_callkit_voximplant:
+    dependency: "direct main"
+    description:
+      name: flutter_callkit_voximplant
+      sha256: fe2c46e1ff9d12c7b5a1f7ec4c50ac20d42f5abbcb7ac988dc3e18ae09524a03
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter

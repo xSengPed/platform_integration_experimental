@@ -5,18 +5,30 @@ import 'dart:ui';
 import 'package:callkit_experimental/models/suspecious_number.dart';
 import 'package:callkit_experimental/services/database_service.dart';
 import 'package:callkit_experimental/services/system_alert.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:phone_state/phone_state.dart';
-import 'package:system_alert_window/system_alert_window.dart';
 
 Future<void> initializeService() async {
   final service = FlutterBackgroundService();
   await DatabaseService().setUp();
   await service.configure(
-      iosConfiguration: IosConfiguration(),
+      iosConfiguration: IosConfiguration(
+          autoStart: true,
+          onForeground: onStart,
+          onBackground: onIosBackground),
       androidConfiguration: AndroidConfiguration(
           onStart: onStart, isForegroundMode: true, autoStart: true));
+}
+
+@pragma('vm:entry-point')
+Future<bool> onIosBackground(ServiceInstance service) async {
+  log("on ios Background");
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
+
+  return true;
 }
 
 @pragma("vm:entry-point")
