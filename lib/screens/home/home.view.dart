@@ -177,11 +177,13 @@ class _HomeViewState extends State<HomeView> {
                                   elevation: 0,
                                   backgroundColor: Colors.green[700]),
                               onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NumberView(),
-                                    ));
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //       builder: (context) => NumberView(),
+                                //     ));
+
+                                NativeService.startCall();
                               },
                               child: Text("Suspecious Numbers")),
                         ),
