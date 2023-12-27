@@ -15,7 +15,7 @@ class NativeService {
   }
 
   static Future<String> getMessage() async {
-    const platform = MethodChannel("callkit.flutter.dev/message");
+    const platform = MethodChannel("callkit.flutter.dev");
     try {
       final res = await platform.invokeMethod("getMessage");
 
@@ -41,22 +41,4 @@ class NativeService {
       throw e;
     }
   }
-  // static Future<void> getBatteryLevel() async {
-  //   try {
-  //     final res = await platform.invokeMethod('getNetworkStatus');
-  //     print('OK + $res');
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
-
-  // static Future<void> getMul() async {
-  //   try {
-  //     final res =
-  //         await platform.invokeMethod('getMultiplyFromSwift', {"a": 4, "b": 5});
-  //     print('OK + $res');
-  //   } catch (e) {
-  //     log(e.toString());
-  //   }
-  // }
 }

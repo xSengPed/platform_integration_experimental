@@ -1,6 +1,7 @@
 import 'package:callkit_experimental/components/caller_ident.dart';
 import 'package:callkit_experimental/components/my_button.dart';
 import 'package:callkit_experimental/screens/home/view_model/home_viewmodel.dart';
+import 'package:callkit_experimental/services/native_service.dart';
 import 'package:callkit_experimental/services/system_alert.dart';
 
 import 'package:flutter/material.dart';
@@ -62,6 +63,11 @@ class _HomeViewState extends State<HomeView> {
                                       "${vm.isPhonePermGranted.toString().toUpperCase()}"),
                                 ],
                               ),
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    await NativeService.getMessage();
+                                  },
+                                  child: Text("test")),
                               Row(
                                 children: [
                                   Text(
