@@ -12,6 +12,7 @@ public class SwiftMethodHandler: NSObject, FlutterPlugin {
         switch call.method {
         case "getMessage": NativeMethod.getMessage(result: result)
         case "setIncomingCall": NativeMethod.setIncomingCall(result: result)
+        case "startCall": NativeMethod.startCalled()
         default: result(FlutterMethodNotImplemented)
         }
     }
@@ -24,5 +25,15 @@ enum NativeMethod {
 
     static func setIncomingCall(result: FlutterResult) {
         result("Set Incomingcall from Swift!")
+    }
+
+    static func startCalled() {
+        if #available(iOS 14.0, *) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                CallManager().startCall(id: UUID(), handle: "Donnukrit")
+            }
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }

@@ -68,6 +68,11 @@ class _HomeViewState extends State<HomeView> {
                                     await NativeService.getMessage();
                                   },
                                   child: Text("test")),
+                              ElevatedButton(
+                                  onPressed: () async {
+                                    await NativeService.startCall();
+                                  },
+                                  child: Text("test 2")),
                               Row(
                                 children: [
                                   Text(
